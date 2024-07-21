@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="participate">
+	
+	<insert id = "setInsert" >
+		insert into participate values (seq_participate.nextval, #{surveyNo}, #{surveyQnANo}, #{memberNo}, #{answer1}, #{answer2}, #{answer3}, #{answer4}, #{answer5},sysdate)
+	</insert>
+	
+	
+	<select id = "getSelectJoin" resultType = "com.example.survey.dto.ResultDTO">
+		SELECT 
+		    p.memberNo, 
+		    s.surveyTitle, 
+		    s.surveySubTitle, 
+		    sqna.question, 
+		    sqna.answer1 AS answerContent1,
+		    sqna.answer2 AS answerContent2,
+		    sqna.answer3 AS answerContent3,
+		    sqna.answer4 AS answerContent4,
+		    sqna.answer5 AS answerContent5,
+		    SUM(p.answer1) AS answer1, 
+		    SUM(p.answer2) AS answer2, 
+		    SUM(p.answer3) AS answer3, 
+		    SUM(p.answer4) AS answer4, 
+		    SUM(p.answer5) AS answer5
+			FROM 
+			    participate p 
+			JOIN 
+			    survey s ON p.surveyNo = s.surveyNo
+			JOIN 
+			    surveyQnA sqna ON p.surveyQnANo = sqna.surveyQnANo
+			WHERE 
+			    p.surveyNo = #{surveyNo}
+			GROUP BY 
+			    p.memberNo, 
+			    s.surveyTitle, 
+			    s.surveySubTitle, 
+			    sqna.question, 
+			    sqna.answer1, 
+			    sqna.answer2, 
+			    sqna.answer3, 
+			    sqna.answer4, 
+			    sqna.answer5,
+			    sqna.surveyQnANo
+			order by 
+				sqna.surveyQnANo asc    
+	</select>
+</mapper>

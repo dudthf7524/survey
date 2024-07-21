@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="survey">
+
+	<select id = "getSelectAll" resultType = "com.example.survey.dto.SurveyDTO">
+		<choose>
+			<when test = "memberNo != null and memberNo != '' ">
+					select * from survey where memberNo =  #{memberNo} order by surveyNo desc
+			</when>
+			<when test = "memberNo == null or memberNo == '' ">
+					select * from survey order by surveyNo desc
+			</when>	
+			<otherwise>
+		
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id = "getSelectOne" resultType = "com.example.survey.dto.SurveyDTO">
+		select * from survey where surveyNo = #{surveyNo}
+	</select>
+	
+	<insert id = "setInsert" >
+		insert into survey values (seq_survey.nextval, #{memberNo}, #{surveyTitle}, #{surveySubTitle}, #{finalDate})
+	</insert>
+	
+	<update id = "setUpdate">
+		update survey set 
+		surveyTitle = #{surveyTitle},
+		surveySubTitle = #{surveySubTitle},
+		finalDate = #{finalDate}
+		where surveyNo = #{surveyNo}
+	</update>
+	
+	<delete id = "setDelete">
+		delete from survey where surveyNo = #{surveyNo}
+	</delete>
+	
+</mapper>
